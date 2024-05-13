@@ -40,7 +40,14 @@
             android:text="@string/app_name"
             android:backgroundTint="@color/cardview_dark_background"
             />
+
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="nothing yet" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"

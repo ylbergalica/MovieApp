@@ -1,10 +1,12 @@
 package com.coursework.movieappv2;
 
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,8 +17,21 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.coursework.movieappv2.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+
+import java.util.HashMap;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -49,6 +64,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         addButtonsToLayout();
+
+        // Button click listener to fetch movies
+        buttons[0].setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    fetchMovies();
+                } catch (AuthFailureError e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        });
     }
 
     private void addButtonsToLayout() {
@@ -63,14 +90,35 @@ public class MainActivity extends AppCompatActivity {
             layoutParams.setMargins(0, 16, 0, 0); // Set margins (left, top, right, bottom) as needed
             button.setLayoutParams(layoutParams);
 
-            button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toast.makeText(MainActivity.this, "Button clicked", Toast.LENGTH_SHORT).show();
-                }
-            });
-
             layout.addView(button); // Add the button to the LinearLayout
         }
+    }
+
+    private void fetchMovies() throws AuthFailureError {
+        TextView text = findViewById(R.id.text);
+        RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
+        String url = "https://app-vpigadas.herokuapp.com/api/movies/";
+
+        HashMap<String, String> headers = new HashMap<>();
+        headers.put("Content-Type", "application/json");
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, url, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        text.setText(response.toString());
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        text.setText(error.toString());
+                    }
+                });
+
+        jsonObjectRequest.getHeaders().put("Content-Type", "application/json");
+
+        queue.add(jsonObjectRequest);
     }
 }
