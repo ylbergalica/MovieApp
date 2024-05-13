@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace = "com.coursework.movieappv2"
+    namespace = "com.york.moviesapp"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.coursework.movieappv2"
+        applicationId = "com.york.moviesapp"
         minSdk = 32
         targetSdk = 34
         versionCode = 1
@@ -19,7 +19,10 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = false
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
         }
     }
     compileOptions {
@@ -43,4 +46,6 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.google.code.gson:gson:2.10.1")
 }

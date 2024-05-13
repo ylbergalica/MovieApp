@@ -1,4 +1,4 @@
-package com.coursework.movieappv2;
+package com.york.moviesapp;
 
 import org.junit.Test;
 

@@ -1,4 +1,4 @@
-package com.coursework.movieappv2;
+package com.york.moviesapp;
 
 import android.content.Context;
 
@@ -21,6 +21,6 @@ public class ExampleInstrumentedTest {
     public void useAppContext() {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
-        assertEquals("com.coursework.movieappv2", appContext.getPackageName());
+        assertEquals("com.york.moviesapp", appContext.getPackageName());
     }
 }
