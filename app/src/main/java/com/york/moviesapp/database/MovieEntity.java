@@ -3,6 +3,7 @@ package com.york.moviesapp.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.util.ArrayList;
 import java.util.Objects;
 
 @Entity(tableName = "Movie")
@@ -11,6 +12,7 @@ public class MovieEntity {
     private int id;
     private String title;
     private String posterPath;
+    private ArrayList<Integer> genreIds;
     private String date;
     private String overview;
     private float popularity;
@@ -39,6 +41,14 @@ public class MovieEntity {
 
     public void setPosterPath(String posterPath) {
         this.posterPath = posterPath;
+    }
+
+    public ArrayList<Integer> getGenreIds() {
+        return genreIds;
+    }
+
+    public void setGenreIds(ArrayList<Integer> genreIds) {
+        this.genreIds = genreIds;
     }
 
     public String getDate() {

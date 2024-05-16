@@ -20,12 +20,14 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.york.moviesapp.database.Category;
 import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.HolderItemBinding;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHolder> {
 
     private ArrayList<MovieEntity> dataList;
+    private ArrayList<Category> categoryList;
     private Context context;
     private Fragment fragment;
     private LayoutInflater inflate;
@@ -49,6 +51,33 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
                 movieEntity.setId(jsonObject.get("id").getAsInt());
                 movieEntity.setTitle(jsonObject.get("title").getAsString());
                 movieEntity.setPosterPath(jsonObject.get("poster_path").getAsString());
+
+                // parse genre_ids into ArrayList of integers
+                JsonArray genreIds = jsonObject.get("genre_ids").getAsJsonArray();
+                ArrayList<Integer> genreIdsList = new ArrayList<Integer>();
+                for (JsonElement genreId : genreIds) {
+                    genreIdsList.add(genreId.getAsInt());
+                }
+                movieEntity.setGenreIds(genreIdsList);
+
+                // add category to categoryList if its new
+                for (int genreId : genreIdsList) {
+                    boolean found = false;
+                    if (categoryList == null) {
+                        categoryList = new ArrayList<Category>();
+                    }
+                    for (Category category : categoryList) {
+                        if (category.getId() == genreId) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        Category category = new Category(genreId, "test" + genreId);
+                        categoryList.add(category);
+                    }
+                }
+
                 movieEntity.setDate(jsonObject.get("release_date").getAsString());
                 movieEntity.setOverview(jsonObject.get("overview").getAsString());
                 movieEntity.setPopularity(jsonObject.get("popularity").getAsFloat());
@@ -71,14 +100,22 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
 
     @Override
     public void onBindViewHolder(@NonNull MyRecyclerViewHolder holder, int position) {
-        holder.binding.text.setText(dataList.get(position).getTitle());
+        // set text
+        holder.binding.text.setText(categoryList.get(position).getName());
 
-        ImageView imageView = holder.binding.image;
-        Glide.with(context).load(dataList.get(position).getPosterPath()).into(imageView);
+        // make arraylist of movies in this category
+        ArrayList<MovieEntity> categoryMovies = new ArrayList<MovieEntity>();
+        for (MovieEntity movie : dataList) {
+            if (movie.getGenreIds().contains(categoryList.get(position).getId())) {
+                categoryMovies.add(movie);
+            }
+        }
+
+        holder.binding.categoryView.setAdapter(new CategoryViewAdapter(categoryMovies, context, inflate));
     }
 
     @Override
     public int getItemCount() {
-        return dataList.size();
+        return categoryList.size();
     }
 }
