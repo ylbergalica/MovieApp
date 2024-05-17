@@ -21,6 +21,4 @@
         List<MovieEntity> getAllMovies();
         @Query("UPDATE Movie SET isFavorite = NOT isFavorite WHERE id = :id")
         void toggleFavorite(int id);
-        @Query("SELECT * FROM Movie WHERE isFavorite = 1")
-        List<MovieEntity> getFavoriteMovies();
     }
