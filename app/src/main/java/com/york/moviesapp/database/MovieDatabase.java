@@ -5,7 +5,7 @@ import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import android.content.Context;
 
-@Database(entities = {MovieEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {MovieEntity.class, FavoriteEntity.class}, version = 2, exportSchema = false)
 public abstract class MovieDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "movie_db";
@@ -22,4 +22,5 @@ public abstract class MovieDatabase extends RoomDatabase {
     }
 
     public abstract MovieDao movieDao();
+    public abstract FavoriteDao favoriteDao();
 }
