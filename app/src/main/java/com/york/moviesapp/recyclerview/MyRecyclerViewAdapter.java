@@ -32,13 +32,15 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
     private Fragment fragment;
     private LayoutInflater inflate;
 
-    public MyRecyclerViewAdapter(JsonElement data, Context context, Fragment fragment, LayoutInflater inflate) {
+    public MyRecyclerViewAdapter(List<MovieEntity> dataList, ArrayList<Category> categories, Context context, Fragment fragment, LayoutInflater inflate) {
         this.context = context;
         this.fragment = fragment;
         this.inflate = inflate;
 
-        JsonArray results = data.getAsJsonObject().get("results").getAsJsonArray();
-        parseData(results);
+//        JsonArray results = data.getAsJsonObject().get("results").getAsJsonArray();
+//        parseData(results);
+        this.dataList = new ArrayList<MovieEntity>(dataList);
+        this.categoryList = categories;
     }
 
     private void parseData(JsonArray data) {

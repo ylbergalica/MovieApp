@@ -18,5 +18,5 @@
         void delete(MovieEntity data);
 
         @Query("SELECT * FROM Movie")
-        List<MovieEntity> getAll();
+        List<MovieEntity> getAllMovies();
     }

@@ -43,6 +43,7 @@ private MovieDao movieDao;
 private MovieDatabase movieDatabase;
 private RecyclerView recyclerView;
 private ArrayList<Category> categoryList;
+private ArrayList<MovieEntity> movieList;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
@@ -68,19 +69,23 @@ private ArrayList<Category> categoryList;
                     List<MovieEntity> movieList = parseData(data.getAsJsonObject().get("results").getAsJsonArray());
                     insertMoviesIntoDatabase(movieList);
 
-                    recyclerView.setAdapter(new MyRecyclerViewAdapter(data, getActivity(), DashboardFragment.this, getLayoutInflater()));
+                    recyclerView.setAdapter(new MyRecyclerViewAdapter(movieList, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater()));
                 }
 
 
                 @Override
                 public void onFailure(String errorMessage) {
                     // Handle failure
+                    Toast.makeText(getContext(), "Something went wrong, data is loaded from cache..", Toast.LENGTH_SHORT).show();
+                    getMoviesFromDatabase();
                     Log.e("APIRequest", errorMessage);
+
                 }
             });
             Log.d("NETWORK", "Network is available");
         } else {
             Toast.makeText(getContext(), "No internet connection data is loaded from cache storage.", Toast.LENGTH_SHORT).show();
+            getMoviesFromDatabase();
             Log.d("NETWORK", "Network is not available");
         }
 
@@ -124,6 +129,50 @@ private ArrayList<Category> categoryList;
             return null;
         }
     }
+
+    private void getMoviesFromDatabase() {
+        new GetMoviesFromDatabaseTask().execute();
+    }
+
+    private class GetMoviesFromDatabaseTask extends AsyncTask<Void, Void, List<MovieEntity>> {
+        @Override
+        protected List<MovieEntity> doInBackground(Void... voids) {
+            return movieDatabase.movieDao().getAllMovies();
+        }
+
+        @Override
+        protected void onPostExecute(List<MovieEntity> movieEntities) {
+            super.onPostExecute(movieEntities);
+            if (movieEntities != null) {
+                // Handle the list of movies retrieved from the database
+                // create catogories from the list of movies
+                for (MovieEntity movie : movieEntities) {
+                    String[] genreIds = movie.getGenreIds().replace("[", "").replace("]", "").replace(" ", "").split(",");
+                    for (String genreId : genreIds) {
+                        boolean found = false;
+                        if (categoryList == null) {
+                            categoryList = new ArrayList<Category>();
+                        }
+                        for (Category category : categoryList) {
+                            if (category.getId() == Integer.parseInt(genreId)) {
+                                found = true;
+                                break;
+                            }
+                        }
+                        if (!found) {
+                            Category category = new Category(Integer.parseInt(genreId), "test" + genreId);
+                            categoryList.add(category);
+                        }
+                    }
+                }
+                recyclerView.setAdapter(new MyRecyclerViewAdapter(movieEntities, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater()));
+            } else {
+                // Handle the case when no movies are found in the database
+                Log.e("GetMoviesTask", "No movies found in the database");
+            }
+        }
+    }
+
 
     private List<MovieEntity> parseData(JsonArray data) {
 
