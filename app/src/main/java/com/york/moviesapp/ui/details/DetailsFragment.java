@@ -3,6 +3,7 @@ package com.york.moviesapp.ui.details;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkCapabilities;
+import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +24,9 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.york.moviesapp.R;
+import com.york.moviesapp.database.MovieDao;
+import com.york.moviesapp.database.MovieDatabase;
+import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.FragmentDetailsBinding;
 import com.york.moviesapp.helpers.APIRequest;
 import com.york.moviesapp.recyclerview.MyRecyclerViewAdapter;
@@ -36,12 +40,17 @@ public class DetailsFragment extends Fragment {
     private FragmentDetailsBinding binding;
     private int movieId;
 
+    private MovieDao movieDao;
+    private MovieDatabase movieDatabase;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DetailsViewModel dashboardViewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
 
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+        movieDatabase = MovieDatabase.getInstance(getContext());
+        movieDao = movieDatabase.movieDao();
 
         // movie title, release year, plot synopsis, genre, rating, runtime, director, cast
         TextView title = binding.title;
@@ -132,6 +141,19 @@ public class DetailsFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    private void toggleFavorite(int id) {
+        new toggleFavoriteAsyncTask().execute(id);
+    }
+
+    private class toggleFavoriteAsyncTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            int id = integers[0];
+            movieDao.toggleFavorite(id);
+            return null;
+        }
     }
 
     @Override
