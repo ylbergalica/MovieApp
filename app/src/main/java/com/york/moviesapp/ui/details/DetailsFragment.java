@@ -129,7 +129,7 @@ public class DetailsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // add movie to favorites
-                Toast.makeText(getContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
+                toggleFavorite(movieId);
             }
         });
 
@@ -165,16 +165,18 @@ public class DetailsFragment extends Fragment {
             return movieDao.isFavorite(id);
         }
 
-//        @Override
-//        protected void onPostExecute(Boolean aBoolean) {
-//            super.onPostExecute(aBoolean);
-//            // set fav icon to filled if movie is favorite
-//            if (aBoolean) {
-//                binding.favIcon.setImageResource(R.drawable.ic_baseline_favorite_24);
-//            } else {
-//                binding.favIcon.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-//            }
-//        }
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            // set fav icon to filled if movie is favorite
+            if (aBoolean) {
+                binding.favIcon.setImageResource(android.R.drawable.btn_star_big_on);
+                Toast.makeText(getContext(), "Movie added to favorites!", Toast.LENGTH_SHORT).show();
+            } else {
+                binding.favIcon.setImageResource(android.R.drawable.btn_star_big_off);
+                Toast.makeText(getContext(), "Movie removed from favorites list!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void toggleFavorite(int id) {
@@ -187,6 +189,12 @@ public class DetailsFragment extends Fragment {
             int id = integers[0];
             movieDao.toggleFavorite(id);
             return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            getIsFavorite(movieId);
         }
     }
 
