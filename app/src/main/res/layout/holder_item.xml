@@ -10,8 +10,10 @@
 		android:id="@+id/text"
 		android:layout_width="match_parent"
 		android:layout_height="wrap_content"
-		android:textSize="20sp"
-		android:padding="10dp"
+		android:textSize="23sp"
+		android:textColor="@color/cardview_dark_background"
+		android:padding="5dp"
+		android:layout_marginTop="5dp"
 		/>
 
 	<androidx.recyclerview.widget.RecyclerView
