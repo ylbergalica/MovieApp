@@ -19,8 +19,4 @@
 
         @Query("SELECT * FROM Movie")
         List<MovieEntity> getAllMovies();
-        @Query("UPDATE Movie SET isFavorite = NOT isFavorite WHERE id = :id")
-        void toggleFavorite(int id);
-        @Query("SELECT isFavorite FROM Movie WHERE id = :id")
-        Boolean isFavorite(int id);
     }

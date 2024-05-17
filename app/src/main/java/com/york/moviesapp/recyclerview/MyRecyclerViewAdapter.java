@@ -41,60 +41,8 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
         this.fragment = fragment;
         this.inflate = inflate;
         this.listener = listener;
-
-//        JsonArray results = data.getAsJsonObject().get("results").getAsJsonArray();
-//        parseData(results);
         this.dataList = new ArrayList<MovieEntity>(dataList);
         this.categoryList = categories;
-    }
-
-    private void parseData(JsonArray data) {
-        dataList = new ArrayList<MovieEntity>();
-
-        if (data != null && data.isJsonArray()) {
-            for (JsonElement element : data) {
-                JsonObject jsonObject = element.getAsJsonObject();
-                MovieEntity movieEntity = new MovieEntity();
-                movieEntity.setId(jsonObject.get("id").getAsInt());
-                movieEntity.setTitle(jsonObject.get("title").getAsString());
-                movieEntity.setPosterPath(jsonObject.get("poster_path").getAsString());
-
-                // parse genre_ids into ArrayList of integers
-                JsonArray genreIds = jsonObject.get("genre_ids").getAsJsonArray();
-                ArrayList<Integer> genreIdsList = new ArrayList<Integer>();
-                for (JsonElement genreId : genreIds) {
-                    genreIdsList.add(genreId.getAsInt());
-                }
-                movieEntity.setGenreIds(genreIdsList.toString());
-
-                // add category to categoryList if its new
-                for (int genreId : genreIdsList) {
-                    boolean found = false;
-                    if (categoryList == null) {
-                        categoryList = new ArrayList<Category>();
-                    }
-                    for (Category category : categoryList) {
-                        if (category.getId() == genreId) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        Category category = new Category(genreId, "test" + genreId);
-                        categoryList.add(category);
-                    }
-                }
-
-                movieEntity.setDate(jsonObject.get("release_date").getAsString());
-                movieEntity.setOverview(jsonObject.get("overview").getAsString());
-                movieEntity.setPopularity(jsonObject.get("popularity").getAsFloat());
-                movieEntity.setVoteCount(jsonObject.get("vote_count").getAsInt());
-                movieEntity.setVoteAverage(jsonObject.get("vote_average").getAsFloat());
-                dataList.add(movieEntity);
-
-                Log.d("da", movieEntity.getTitle());
-            }
-        }
     }
 
     @NonNull

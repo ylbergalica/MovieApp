@@ -24,6 +24,8 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.york.moviesapp.R;
+import com.york.moviesapp.database.FavoriteDao;
+import com.york.moviesapp.database.FavoriteEntity;
 import com.york.moviesapp.database.MovieDao;
 import com.york.moviesapp.database.MovieDatabase;
 import com.york.moviesapp.database.MovieEntity;
@@ -40,7 +42,7 @@ public class DetailsFragment extends Fragment {
     private FragmentDetailsBinding binding;
     private int movieId;
 
-    private MovieDao movieDao;
+    private FavoriteDao favoriteDao;
     private MovieDatabase movieDatabase;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -50,7 +52,7 @@ public class DetailsFragment extends Fragment {
         View root = binding.getRoot();
 
         movieDatabase = MovieDatabase.getInstance(getContext());
-        movieDao = movieDatabase.movieDao();
+        favoriteDao = movieDatabase.favoriteDao();
 
         // movie title, release year, plot synopsis, genre, rating, runtime, director, cast
         TextView title = binding.title;
@@ -106,6 +108,8 @@ public class DetailsFragment extends Fragment {
                             castString += castMember.getAsJsonObject().get("name").getAsString() + ", ";
                         }
                         cast.setText(castString);
+
+                        getIsFavorite(movieId);
                     }
 
                     @Override
@@ -133,6 +137,7 @@ public class DetailsFragment extends Fragment {
             }
         });
 
+
         return root;
     }
 
@@ -154,15 +159,21 @@ public class DetailsFragment extends Fragment {
         return false;
     }
 
-    private void getIsFavorite(int id) {
-        new getIsFavoriteAsyncTask().execute(id);
+    private void toggleFavorite(int id) {
+        new toggleFavoriteAsyncTask().execute(id);
     }
 
-    private class getIsFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
+    private class toggleFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
         @Override
         protected Boolean doInBackground(Integer... integers) {
             int id = integers[0];
-            return movieDao.isFavorite(id);
+            int isFavorite = favoriteDao.isFavorite(id);
+            if (isFavorite == 1) {
+                removeFromFavorite(id);
+            } else {
+                addToFavorite(id);
+            }
+            return isFavorite == 0;
         }
 
         @Override
@@ -176,18 +187,53 @@ public class DetailsFragment extends Fragment {
                 binding.favIcon.setImageResource(android.R.drawable.btn_star_big_off);
                 Toast.makeText(getContext(), "Movie removed from favorites list!", Toast.LENGTH_SHORT).show();
             }
+
+            Log.d("FAVORITE", "Movie is favorite: " + aBoolean);
         }
     }
 
-    private void toggleFavorite(int id) {
-        new toggleFavoriteAsyncTask().execute(id);
+    private void getIsFavorite(int id) {
+        new getIsFavoriteAsyncTask().execute(id);
     }
 
-    private class toggleFavoriteAsyncTask extends AsyncTask<Integer, Void, Void> {
+    private class getIsFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            int id = integers[0];
+            Log.d("test", "isFavorite: " + id);
+            return favoriteDao.isFavorite(id) == 1;
+        }
+
+        @Override
+        protected void onPostExecute(Boolean aBoolean) {
+            super.onPostExecute(aBoolean);
+            // set fav icon to filled if movie is favorite
+            if (aBoolean) {
+                binding.favIcon.setImageResource(android.R.drawable.btn_star_big_on);
+                Toast.makeText(getContext(), "Movie added to favorites!", Toast.LENGTH_SHORT).show();
+            } else {
+                binding.favIcon.setImageResource(android.R.drawable.btn_star_big_off);
+                Toast.makeText(getContext(), "yyyyy", Toast.LENGTH_SHORT).show();
+            }
+
+            Log.d("FAVORITE", "Movie is favorite: " + aBoolean);
+        }
+    }
+
+    private void addToFavorite(int id) {
+        new addToFavoriteAsyncTask().execute(id);
+    }
+
+    private class addToFavoriteAsyncTask extends AsyncTask<Integer, Void, Void> {
         @Override
         protected Void doInBackground(Integer... integers) {
-            int id = integers[0];
-            movieDao.toggleFavorite(id);
+//            int movieId = integers[0];
+            FavoriteEntity favorite = new FavoriteEntity();
+            favorite.setMovieId(movieId);
+
+            Log.d("idgood", favorite.getMovieId() + "");
+
+            favoriteDao.addFavorite(favorite);
             return null;
         }
 
@@ -195,6 +241,26 @@ public class DetailsFragment extends Fragment {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             getIsFavorite(movieId);
+        }
+    }
+
+    private void removeFromFavorite(int id) {
+        new removeFromFavoriteAsyncTask().execute(id);
+    }
+
+    private class removeFromFavoriteAsyncTask extends AsyncTask<Integer, Void, Void> {
+        @Override
+        protected Void doInBackground(Integer... integers) {
+            int movieId = integers[0];
+
+            favoriteDao.removeFavorite(movieId);
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+                getIsFavorite(movieId);
         }
     }
 
