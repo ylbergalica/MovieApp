@@ -18,7 +18,7 @@ public class MovieEntity {
     private float popularity;
     private int voteCount;
     private float voteAverage;
-    private boolean isFavorite;
+    private boolean isFavorite = false;
 
     public int getId() {
         return id;

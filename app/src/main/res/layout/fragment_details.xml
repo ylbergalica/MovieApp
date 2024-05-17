@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingBottom="100dp"
     tools:context=".ui.dashboard.DashboardFragment">
 
     <ScrollView
@@ -154,16 +155,16 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 />
 
+            <ImageView
+                android:id="@+id/favIcon"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:padding="10dp"
+                android:src="@android:drawable/btn_star"
+                tools:ignore="MissingConstraints" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
+
     </ScrollView>
-
-    <ImageView
-        android:id="@+id/favIcon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:padding="10dp"
-        android:src="@android:drawable/btn_star"
-        tools:layout_editor_absoluteX="356dp"
-        tools:layout_editor_absoluteY="177dp" />
-
 </FrameLayout>
+
