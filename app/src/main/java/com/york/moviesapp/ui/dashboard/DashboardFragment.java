@@ -174,7 +174,16 @@ private ArrayList<MovieEntity> movieList;
                         }
                     }
                 }
-                recyclerView.setAdapter(new MyRecyclerViewAdapter(movieEntities, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater()));
+                recyclerView.setAdapter(new MyRecyclerViewAdapter(movieEntities, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater(), new MyRecyclerViewAdapter.OnMovieClickListener() {
+                    @Override
+                    public void onMovieClick(com.york.moviesapp.database.MovieEntity movie) {
+                        // Handle movie click
+                        Bundle bundle = new Bundle();
+                        bundle.putInt("movieId", movie.getId());
+                        NavHostFragment.findNavController(DashboardFragment.this)
+                                .navigate(R.id.action_dashboard_to_details, bundle);
+                    }
+                }));
             } else {
                 // Handle the case when no movies are found in the database
                 Log.e("GetMoviesTask", "No movies found in the database");
