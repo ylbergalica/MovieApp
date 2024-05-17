@@ -54,6 +54,8 @@ public class DetailsFragment extends Fragment {
         TextView director = binding.director;
         TextView cast = binding.cast;
 
+        ImageView favIcon = binding.favIcon;
+
         if(isNetworkAvailable(getActivity())) {
             if (getArguments() != null) {
                 movieId = getArguments().getInt("movieId");
@@ -112,6 +114,15 @@ public class DetailsFragment extends Fragment {
             Toast.makeText(getContext(), "No internet connection data is loaded from cache storage.", Toast.LENGTH_SHORT).show();
             Log.d("NETWORK", "Network is not available");
         }
+
+        // make fav icon clickable
+        favIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // add movie to favorites
+                Toast.makeText(getContext(), "Movie added to favorites", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         return root;
     }
