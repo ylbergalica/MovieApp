@@ -12,12 +12,13 @@ public class MovieEntity {
     private int id;
     private String title;
     private String posterPath;
-    private ArrayList<Integer> genreIds;
+    private String genreIds;
     private String date;
     private String overview;
     private float popularity;
     private int voteCount;
     private float voteAverage;
+    private boolean isFavorite;
 
     public int getId() {
         return id;
@@ -43,12 +44,12 @@ public class MovieEntity {
         this.posterPath = posterPath;
     }
 
-    public ArrayList<Integer> getGenreIds() {
+    public String getGenreIds() {
         return genreIds;
     }
 
-    public void setGenreIds(ArrayList<Integer> genreIds) {
-        this.genreIds = genreIds;
+    public void setGenreIds(String genreIds) {
+        this.genreIds = genreIds.toString();
     }
 
     public String getDate() {
@@ -89,5 +90,13 @@ public class MovieEntity {
 
     public void setVoteAverage(float voteAverage) {
         this.voteAverage = voteAverage;
+    }
+
+    public boolean isFavorite() {
+        return isFavorite;
+    }
+
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 }

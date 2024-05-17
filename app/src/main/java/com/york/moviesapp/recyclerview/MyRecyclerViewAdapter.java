@@ -58,7 +58,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
                 for (JsonElement genreId : genreIds) {
                     genreIdsList.add(genreId.getAsInt());
                 }
-                movieEntity.setGenreIds(genreIdsList);
+                movieEntity.setGenreIds(genreIdsList.toString());
 
                 // add category to categoryList if its new
                 for (int genreId : genreIdsList) {
@@ -106,7 +106,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
         // make arraylist of movies in this category
         ArrayList<MovieEntity> categoryMovies = new ArrayList<MovieEntity>();
         for (MovieEntity movie : dataList) {
-            if (movie.getGenreIds().contains(categoryList.get(position).getId())) {
+            if (movie.getGenreIds().contains(categoryList.get(position).getId() + "")) {
                 categoryMovies.add(movie);
             }
         }
