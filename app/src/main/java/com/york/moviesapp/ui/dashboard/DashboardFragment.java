@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.gson.JsonArray;
@@ -55,9 +56,17 @@ private RecyclerView recyclerView;
                     // Process the data here
                     Log.d("DATA", data.toString());
 
-                    recyclerView.setAdapter(new MyRecyclerViewAdapter(data, getActivity(), DashboardFragment.this, getLayoutInflater()));
+                    recyclerView.setAdapter(new MyRecyclerViewAdapter(data, getActivity(), DashboardFragment.this, getLayoutInflater(), new MyRecyclerViewAdapter.OnMovieClickListener() {
+                        @Override
+                        public void onMovieClick(com.york.moviesapp.database.MovieEntity movie) {
+                            // Handle movie click
+                            Bundle bundle = new Bundle();
+                            bundle.putInt("movieId", movie.getId());
+                            NavHostFragment.findNavController(DashboardFragment.this)
+                                    .navigate(R.id.action_dashboard_to_details, bundle);
+                        }
+                    }));
                 }
-
 
                 @Override
                 public void onFailure(String errorMessage) {

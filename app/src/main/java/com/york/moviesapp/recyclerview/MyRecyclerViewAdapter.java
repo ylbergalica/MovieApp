@@ -25,17 +25,22 @@ import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.HolderItemBinding;
 
 public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHolder> {
+    public interface OnMovieClickListener {
+        void onMovieClick(MovieEntity movie);
+    }
 
     private ArrayList<MovieEntity> dataList;
     private ArrayList<Category> categoryList;
     private Context context;
     private Fragment fragment;
     private LayoutInflater inflate;
+    private OnMovieClickListener listener;
 
-    public MyRecyclerViewAdapter(JsonElement data, Context context, Fragment fragment, LayoutInflater inflate) {
+    public MyRecyclerViewAdapter(JsonElement data, Context context, Fragment fragment, LayoutInflater inflate, OnMovieClickListener listener) {
         this.context = context;
         this.fragment = fragment;
         this.inflate = inflate;
+        this.listener = listener;
 
         JsonArray results = data.getAsJsonObject().get("results").getAsJsonArray();
         parseData(results);
@@ -111,7 +116,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewHo
             }
         }
 
-        holder.binding.categoryView.setAdapter(new CategoryViewAdapter(categoryMovies, context, inflate));
+        holder.binding.categoryView.setAdapter(new CategoryViewAdapter(categoryMovies, context, inflate, listener));
     }
 
     @Override

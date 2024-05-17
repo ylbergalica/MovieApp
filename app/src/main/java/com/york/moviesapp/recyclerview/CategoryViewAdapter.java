@@ -22,17 +22,19 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.MovieItemBinding;
+import com.york.moviesapp.recyclerview.MyRecyclerViewAdapter.OnMovieClickListener;
 
 public class CategoryViewAdapter extends RecyclerView.Adapter<CategoryViewHolder> {
-
     private ArrayList<MovieEntity> dataList;
     private Context context;
     private LayoutInflater inflate;
+    private OnMovieClickListener listener;
 
-    public CategoryViewAdapter(ArrayList<MovieEntity> data, Context context, LayoutInflater inflate) {
+    public CategoryViewAdapter(ArrayList<MovieEntity> data, Context context, LayoutInflater inflate, OnMovieClickListener listener) {
         this.context = context;
         this.inflate = inflate;
         this.dataList = data;
+        this.listener = listener;
     }
 
     @NonNull
@@ -51,6 +53,10 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<CategoryViewHolder
         // set image
         ImageView imageView = holder.binding.image;
         Glide.with(context).load(dataList.get(position).getPosterPath()).into(imageView);
+
+        holder.binding.getRoot().setOnClickListener(v -> {
+            listener.onMovieClick(dataList.get(position));
+        });
     }
 
     @Override
