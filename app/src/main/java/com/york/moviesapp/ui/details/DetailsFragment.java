@@ -154,6 +154,29 @@ public class DetailsFragment extends Fragment {
         return false;
     }
 
+    private void getIsFavorite(int id) {
+        new getIsFavoriteAsyncTask().execute(id);
+    }
+
+    private class getIsFavoriteAsyncTask extends AsyncTask<Integer, Void, Boolean> {
+        @Override
+        protected Boolean doInBackground(Integer... integers) {
+            int id = integers[0];
+            return movieDao.isFavorite(id);
+        }
+
+//        @Override
+//        protected void onPostExecute(Boolean aBoolean) {
+//            super.onPostExecute(aBoolean);
+//            // set fav icon to filled if movie is favorite
+//            if (aBoolean) {
+//                binding.favIcon.setImageResource(R.drawable.ic_baseline_favorite_24);
+//            } else {
+//                binding.favIcon.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+//            }
+//        }
+    }
+
     private void toggleFavorite(int id) {
         new toggleFavoriteAsyncTask().execute(id);
     }
