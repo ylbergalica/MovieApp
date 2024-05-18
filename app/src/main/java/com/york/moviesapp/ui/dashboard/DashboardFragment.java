@@ -169,7 +169,7 @@ private ArrayList<MovieEntity> movieList;
                             }
                         }
                         if (!found) {
-                            Category category = new Category(Integer.parseInt(genreId), "test" + genreId);
+                            Category category = new Category(Integer.parseInt(genreId));
                             categoryList.add(category);
                         }
                     }
@@ -225,7 +225,7 @@ private ArrayList<MovieEntity> movieList;
                         }
                     }
                     if (!found) {
-                        Category category = new Category(genreId, "test" + genreId);
+                        Category category = new Category(genreId);
                         categoryList.add(category);
                     }
                 }

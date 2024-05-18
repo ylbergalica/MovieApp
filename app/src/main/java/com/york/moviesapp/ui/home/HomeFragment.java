@@ -9,6 +9,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.fragment.NavHostFragment;
+
+import com.york.moviesapp.R;
 import com.york.moviesapp.databinding.FragmentHomeBinding;
 
 public class HomeFragment extends Fragment {
@@ -26,7 +29,23 @@ private FragmentHomeBinding binding;
         final TextView textView = binding.textHome;
         homeViewModel.getText().observe(getViewLifecycleOwner(), textView::setText);
 
-//        Button
+        Button buttonHome = binding.buttonHome;
+        Button buttonFavs = binding.buttonFavs;
+        buttonHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(HomeFragment.this)
+                        .navigate(R.id.action_home_to_dashboard);
+            }
+        });
+
+        buttonFavs.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                NavHostFragment.findNavController(HomeFragment.this)
+                        .navigate(R.id.action_home_to_favorites);
+            }
+        });
 
         return root;
     }
