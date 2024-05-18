@@ -2,18 +2,16 @@ package com.york.moviesapp.ui.notifications;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.york.moviesapp.R;
-import com.york.moviesapp.database.Category;
 import com.york.moviesapp.database.FavoriteDao;
 import com.york.moviesapp.database.FavoriteEntity;
 import com.york.moviesapp.database.MovieDao;
@@ -21,14 +19,12 @@ import com.york.moviesapp.database.MovieDatabase;
 import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.FragmentNotificationsBinding;
 import com.york.moviesapp.recyclerview.FavoritesViewAdapter;
-import com.york.moviesapp.recyclerview.MyRecyclerViewAdapter;
-import com.york.moviesapp.ui.dashboard.DashboardFragment;
+import com.york.moviesapp.recyclerview.GenresViewAdapter;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NotificationsFragment extends Fragment {
+public class FavoritesFragment extends Fragment {
 
     private FavoriteDao favoriteDao;
     private MovieDao movieDao;
@@ -39,8 +35,8 @@ public class NotificationsFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater,
             ViewGroup container, Bundle savedInstanceState) {
-        NotificationsViewModel notificationsViewModel =
-                new ViewModelProvider(this).get(NotificationsViewModel.class);
+        FavoritesViewModel notificationsViewModel =
+                new ViewModelProvider(this).get(FavoritesViewModel.class);
 
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
@@ -100,13 +96,13 @@ public class NotificationsFragment extends Fragment {
                 }
             }
 
-            binding.favoritesView.setAdapter(new FavoritesViewAdapter(movieList, getContext(), getLayoutInflater(), new MyRecyclerViewAdapter.OnMovieClickListener() {
+            binding.favoritesView.setAdapter(new FavoritesViewAdapter(movieList, getContext(), getLayoutInflater(), new GenresViewAdapter.OnMovieClickListener() {
                 @Override
                 public void onMovieClick(com.york.moviesapp.database.MovieEntity movie) {
                     // Handle movie click
                     Bundle bundle = new Bundle();
                     bundle.putInt("movieId", movie.getId());
-                    NavHostFragment.findNavController(NotificationsFragment.this)
+                    NavHostFragment.findNavController(FavoritesFragment.this)
                             .navigate(R.id.action_favorites_to_details, bundle);
                 }
             }));

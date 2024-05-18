@@ -25,7 +25,7 @@ public class RecyclerActivity extends AppCompatActivity {
         super.onPostCreate(savedInstanceState);
 
 //        _binding.recyclerView.setAdapter(
-//                new MyRecyclerViewAdapter(new ArrayList<String>(), this, , getLayoutInflater())
+//                new GenresViewAdapter(new ArrayList<String>(), this, , getLayoutInflater())
 //        );
     }
 }

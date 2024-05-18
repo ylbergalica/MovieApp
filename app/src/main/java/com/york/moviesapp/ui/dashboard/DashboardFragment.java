@@ -10,7 +10,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -29,10 +28,8 @@ import com.york.moviesapp.database.MovieDatabase;
 import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.FragmentDashboardBinding;
 import com.york.moviesapp.helpers.APIRequest;
-import com.york.moviesapp.recyclerview.MyRecyclerViewAdapter;
-import com.york.moviesapp.ui.home.HomeFragment;
+import com.york.moviesapp.recyclerview.GenresViewAdapter;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,7 +67,7 @@ private ArrayList<MovieEntity> movieList;
                     List<MovieEntity> movieList = parseData(data.getAsJsonObject().get("results").getAsJsonArray());
                     insertMoviesIntoDatabase(movieList);
 
-                    recyclerView.setAdapter(new MyRecyclerViewAdapter(movieList, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater(), new MyRecyclerViewAdapter.OnMovieClickListener() {
+                    recyclerView.setAdapter(new GenresViewAdapter(movieList, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater(), new GenresViewAdapter.OnMovieClickListener() {
                         @Override
                         public void onMovieClick(com.york.moviesapp.database.MovieEntity movie) {
                             // Handle movie click
@@ -172,7 +169,7 @@ private ArrayList<MovieEntity> movieList;
                         }
                     }
                 }
-                recyclerView.setAdapter(new MyRecyclerViewAdapter(movieEntities, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater(), new MyRecyclerViewAdapter.OnMovieClickListener() {
+                recyclerView.setAdapter(new GenresViewAdapter(movieEntities, categoryList, getActivity(), DashboardFragment.this, getLayoutInflater(), new GenresViewAdapter.OnMovieClickListener() {
                     @Override
                     public void onMovieClick(com.york.moviesapp.database.MovieEntity movie) {
                         // Handle movie click

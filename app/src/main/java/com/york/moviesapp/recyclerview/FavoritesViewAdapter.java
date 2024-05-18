@@ -18,9 +18,9 @@ public class FavoritesViewAdapter extends RecyclerView.Adapter<FavoritesViewHold
     private ArrayList<MovieEntity> dataList;
     private Context context;
     private LayoutInflater inflate;
-    private MyRecyclerViewAdapter.OnMovieClickListener listener;
+    private GenresViewAdapter.OnMovieClickListener listener;
 
-    public FavoritesViewAdapter(ArrayList<MovieEntity> data, Context context, LayoutInflater inflate, MyRecyclerViewAdapter.OnMovieClickListener listener) {
+    public FavoritesViewAdapter(ArrayList<MovieEntity> data, Context context, LayoutInflater inflate, GenresViewAdapter.OnMovieClickListener listener) {
         this.context = context;
         this.inflate = inflate;
         this.dataList = data;
