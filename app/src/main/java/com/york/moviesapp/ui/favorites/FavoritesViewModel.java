@@ -1,4 +1,4 @@
-package com.york.moviesapp.ui.notifications;
+package com.york.moviesapp.ui.favorites;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;

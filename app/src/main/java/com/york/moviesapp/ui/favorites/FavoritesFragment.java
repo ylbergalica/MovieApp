@@ -1,4 +1,4 @@
-package com.york.moviesapp.ui.notifications;
+package com.york.moviesapp.ui.favorites;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
