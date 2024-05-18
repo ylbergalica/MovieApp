@@ -17,13 +17,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.york.moviesapp.R;
+import com.york.moviesapp.database.Category;
 import com.york.moviesapp.database.FavoriteDao;
 import com.york.moviesapp.database.FavoriteEntity;
 import com.york.moviesapp.database.MovieDao;
@@ -31,10 +29,7 @@ import com.york.moviesapp.database.MovieDatabase;
 import com.york.moviesapp.database.MovieEntity;
 import com.york.moviesapp.databinding.FragmentDetailsBinding;
 import com.york.moviesapp.helpers.APIRequest;
-import com.york.moviesapp.recyclerview.MyRecyclerViewAdapter;
-import com.york.moviesapp.ui.home.HomeFragment;
 
-import java.sql.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,16 +37,19 @@ public class DetailsFragment extends Fragment {
     private FragmentDetailsBinding binding;
     private int movieId;
 
+    private MovieDao movieDao;
     private FavoriteDao favoriteDao;
     private MovieDatabase movieDatabase;
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         DetailsViewModel dashboardViewModel = new ViewModelProvider(this).get(DetailsViewModel.class);
 
+
         binding = FragmentDetailsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
         movieDatabase = MovieDatabase.getInstance(getContext());
+        movieDao = movieDatabase.movieDao();
         favoriteDao = movieDatabase.favoriteDao();
 
         // movie title, release year, plot synopsis, genre, rating, runtime, director, cast
@@ -67,9 +65,9 @@ public class DetailsFragment extends Fragment {
 
         ImageView favIcon = binding.favIcon;
 
+        movieId = getArguments().getInt("movieId");
         if(isNetworkAvailable(getActivity())) {
             if (getArguments() != null) {
-                movieId = getArguments().getInt("movieId");
                 // Use the movieId to fetch and display the movie details
 
                 APIRequest.getMovie("" + movieId, new APIRequest.ApiCallback() {
@@ -124,7 +122,8 @@ public class DetailsFragment extends Fragment {
 
             Log.d("NETWORK", "Network is available");
         } else {
-            Toast.makeText(getContext(), "No internet connection data is loaded from cache storage.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "No internet connection. Viewing limited information.", Toast.LENGTH_SHORT).show();
+            getMovieById();
             Log.d("NETWORK", "Network is not available");
         }
 
@@ -157,6 +156,45 @@ public class DetailsFragment extends Fragment {
             }
         }
         return false;
+    }
+
+    private void getMovieById(){
+        new getMovieByIdAsyncTask().execute();
+    }
+
+    private class getMovieByIdAsyncTask extends AsyncTask<Void, Void, MovieEntity> {
+        @Override
+        protected MovieEntity doInBackground(Void... voids) {
+            return movieDao.getMovieById(movieId);
+        }
+
+        @Override
+        protected void onPostExecute(MovieEntity movie) {
+            super.onPostExecute(movie);
+
+            if (movie != null) {
+                Glide.with(getContext()).load(movie.getPosterPath()).into(binding.image);
+                binding.title.setText(movie.getTitle());
+                binding.release.setText(movie.getDate());
+
+                String genreString = "";
+                String[] genreIds = movie.getGenreIds().replace("[", "").replace("]", "").replace(" ", "").split(",");;
+                List<Category> categoryList = new ArrayList<Category>();
+                for (String genre : genreIds) {
+                    categoryList.add(new Category(Integer.parseInt(genre)));
+                }
+                for (Category category : categoryList) {
+                    genreString += category.getName() + ", ";
+                }
+                binding.genres.setText(genreString);
+
+                binding.description.setText(movie.getOverview());
+                binding.rating.setText("Rating: " + movie.getVoteAverage());
+            } else {
+                // Handle the case when no movies are found in the database
+                Log.e("GetMoviesTask", "No movies found in the database");
+            }
+        }
     }
 
     private void toggleFavorite(int id) {
@@ -200,7 +238,6 @@ public class DetailsFragment extends Fragment {
         @Override
         protected Boolean doInBackground(Integer... integers) {
             int id = integers[0];
-            Log.d("test", "isFavorite: " + id);
             return favoriteDao.isFavorite(id) == 1;
         }
 
@@ -210,10 +247,8 @@ public class DetailsFragment extends Fragment {
             // set fav icon to filled if movie is favorite
             if (aBoolean) {
                 binding.favIcon.setImageResource(android.R.drawable.btn_star_big_on);
-                Toast.makeText(getContext(), "Movie added to favorites!", Toast.LENGTH_SHORT).show();
             } else {
                 binding.favIcon.setImageResource(android.R.drawable.btn_star_big_off);
-                Toast.makeText(getContext(), "yyyyy", Toast.LENGTH_SHORT).show();
             }
 
             Log.d("FAVORITE", "Movie is favorite: " + aBoolean);
@@ -230,8 +265,6 @@ public class DetailsFragment extends Fragment {
 //            int movieId = integers[0];
             FavoriteEntity favorite = new FavoriteEntity();
             favorite.setMovieId(movieId);
-
-            Log.d("idgood", favorite.getMovieId() + "");
 
             favoriteDao.addFavorite(favorite);
             return null;

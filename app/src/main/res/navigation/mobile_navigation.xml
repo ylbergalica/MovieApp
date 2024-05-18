@@ -10,13 +10,6 @@
         android:name="com.york.moviesapp.ui.home.HomeFragment"
         android:label="Home"
         tools:layout="@layout/fragment_home" >
-
-        <action
-            android:id="@+id/action_home_to_dashboard"
-            app:destination="@id/navigation_dashboard" />
-        <action
-            android:id="@+id/action_home_to_favorites"
-            app:destination="@id/navigation_notifications" />
     </fragment>
 
     <fragment

@@ -99,8 +99,6 @@ private ArrayList<MovieEntity> movieList;
         }
 
 
-
-
         return root;
     }
 
@@ -232,8 +230,7 @@ private ArrayList<MovieEntity> movieList;
 
                 movieEntity.setDate(jsonObject.get("release_date").getAsString());
                 movieEntity.setOverview(jsonObject.get("overview").getAsString());
-                movieEntity.setPopularity(jsonObject.get("popularity").getAsFloat());
-                movieEntity.setVoteCount(jsonObject.get("vote_count").getAsInt());
+                movieEntity.setBackdropPath(jsonObject.get("backdrop_path").getAsString());
                 movieEntity.setVoteAverage(jsonObject.get("vote_average").getAsFloat());
                 dataList.add(movieEntity);
 

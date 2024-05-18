@@ -12,11 +12,10 @@ public class MovieEntity {
     private int id;
     private String title;
     private String posterPath;
+    private String backdropPath;
     private String genreIds;
     private String date;
     private String overview;
-    private float popularity;
-    private int voteCount;
     private float voteAverage;
     private boolean isFavorite = false;
 
@@ -68,20 +67,12 @@ public class MovieEntity {
         this.overview = overview;
     }
 
-    public float getPopularity() {
-        return popularity;
+    public String getBackdropPath() {
+        return backdropPath;
     }
 
-    public void setPopularity(float popularity) {
-        this.popularity = popularity;
-    }
-
-    public int getVoteCount() {
-        return voteCount;
-    }
-
-    public void setVoteCount(int voteCount) {
-        this.voteCount = voteCount;
+    public void setBackdropPath(String backdropPath) {
+        this.backdropPath = backdropPath;
     }
 
     public float getVoteAverage() {

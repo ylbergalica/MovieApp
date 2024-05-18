@@ -9,8 +9,7 @@
 
     import java.util.List;
     @Dao
-    public interface MovieDao
-    {
+    public interface MovieDao {
         @Insert(onConflict = OnConflictStrategy.REPLACE)
         void save(MovieEntity data);
 
@@ -19,4 +18,8 @@
 
         @Query("SELECT * FROM Movie")
         List<MovieEntity> getAllMovies();
+
+        @Query("SELECT * FROM Movie WHERE id = :id")
+        MovieEntity getMovieById(int id);
+
     }
