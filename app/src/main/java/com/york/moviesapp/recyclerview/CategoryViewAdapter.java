@@ -48,7 +48,8 @@ public class CategoryViewAdapter extends RecyclerView.Adapter<CategoryViewHolder
     @Override
     public void onBindViewHolder(@NonNull CategoryViewHolder holder, int position) {
         // set text
-//        holder.binding.text.setText(dataList.get(position).getTitle());
+        holder.binding.textView.setText(dataList.get(position).getTitle());
+        holder.binding.date.setText(dataList.get(position).getDate().split("-")[0]);
 
         // set image
         ImageView imageView = holder.binding.image;
